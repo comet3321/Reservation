@@ -61,7 +61,7 @@ class Calendar {
     foreach ($period as $day) {
       if ($day->format('w') === '0') { $body .= '</tr><tr>'; }
       $todayClass = ($day->format('Y-m-d') === $today->format('Y-m-d')) ? 'today' : '';
-      $body .= sprintf('<td class="youbi_%d %s">%d</td>', $day->format('w'), $todayClass, $day->format('d'));
+      $body .= sprintf('<td ><a href="reservation.php?id=' . $today->format('Y-m-d') . '" class="youbi_%d %s">%d</a></td>', $day->format('w'), $todayClass, $day->format('d'));
     }
     return $body;
   }
