@@ -1,13 +1,31 @@
 <?php
-function h($s){
-  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+require_once('config.php');
+
+try {
+  $pdo = new PDO(DSN, DB_USERNAME, DB_PASSWORD);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (Exception $e) {
+  echo $e->getMessage() . PHP_EOL;
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $day = $_GET['id'];
 }
+
+$Day = str_replace(array('-'), '', $day);
 $today = new \DateTime('today');
-if ($day < $today) {
+$Today = $today->format('Ymd');
+if ($Day < $Today) {
   echo '過去の日の予約はできません。';
+  exit();
+}
+
+$sql_result = $pdo->query("select id from customers where day = '$day'");
+$Result = $sql_result->fetchAll();
+$count = count($Result);
+
+if ($count >= 5) {
+  echo '満席御礼！！！！！！！';
   exit();
 }
 ?>
