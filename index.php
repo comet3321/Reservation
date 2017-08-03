@@ -1,9 +1,6 @@
 <?php
-require 'calender.php';
-
-function h($s){
-  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
-}
+require_once 'calender.php';
+require_once 'config.php';
 
 $cal = new \MyApp\Calendar();
 ?>
