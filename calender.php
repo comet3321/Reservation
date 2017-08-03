@@ -1,51 +1,79 @@
 <?php
 
-// 現在の年月を取得
-$year = date('Y');
-$month = date('n');
+namespace MyApp;
 
-// 月末日を取得
-$last_day = date('j', mktime(0, 0, 0, $month + 1, 0, $year));
+class Calendar {
+  public $prev;
+  public $next;
+  public $yearMonth;
+  private $_thisMonth;
 
-$calendar = array();
-$j = 0;
-
-// 月末日までループ
-for ($i = 1; $i < $last_day + 1; $i++) {
-
-    // 曜日を取得
-    $week = date('w', mktime(0, 0, 0, $month, $i, $year));
-
-    // 1日の場合
-    if ($i == 1) {
-
-        // 1日目の曜日までをループ
-        for ($s = 1; $s <= $week; $s++) {
-
-            // 前半に空文字をセット
-            $calendar[$j]['day'] = '';
-            $j++;
-
-        }
-
+  public function __construct() {
+    try {
+      if (!isset($_GET['t']) || !preg_match('/\A\d{4}-\d{2}\z/', $_GET['t'])) {
+        throw new \Exception();
+      }
+      $this->_thisMonth = new \DateTime($_GET['t']);
+    } catch (\Exception $e) {
+      $this->_thisMonth = new \DateTime('first day of this month');
     }
+    $this->prev = $this->_createPrevLink();
+    $this->next = $this->_createNextLink();
+    $this->yearMonth = $this->_thisMonth->format('F Y');
+  }
 
-    // 配列に日付をセット
-    $calendar[$j]['day'] = $i;
-    $j++;
+  private function _createPrevLink() {
+    $dt = clone $this->_thisMonth;
+    return $dt->modify('-1 month')->format('Y-m');
+  }
 
-    // 月末日の場合
-    if ($i == $last_day) {
+  private function _createNextLink() {
+    $dt = clone $this->_thisMonth;
+    return $dt->modify('+1 month')->format('Y-m');
+  }
 
-        // 月末日から残りをループ
-        for ($e = 1; $e <= 6 - $week; $e++) {
+  public function show() {
+    $tail = $this->_getTail();
+    $body = $this->_getBody();
+    $head = $this->_getHead();
+    $html = '<tr>' . $tail . $body . $head . '</tr>';
+    echo $html;
+  }
 
-            // 後半に空文字をセット
-            $calendar[$j]['day'] = '';
-            $j++;
-
-        }
-
+  private function _getTail() {
+    $tail = '';
+    $lastDayOfPrevMonth = new \DateTime('last day of ' . $this->yearMonth . ' -1 month');
+    while ($lastDayOfPrevMonth->format('w') < 6) {
+      $tail = sprintf('<td class="gray">%d</td>', $lastDayOfPrevMonth->format('d')) . $tail;
+      $lastDayOfPrevMonth->sub(new \DateInterval('P1D'));
     }
+    return $tail;
+  }
+
+  private function _getBody() {
+    $body = '';
+    $period = new \DatePeriod(
+      new \DateTime('first day of ' . $this->yearMonth),
+      new \DateInterval('P1D'),
+      new \DateTime('first day of ' . $this->yearMonth . ' +1 month')
+    );
+    $today = new \DateTime('today');
+    foreach ($period as $day) {
+      if ($day->format('w') === '0') { $body .= '</tr><tr>'; }
+      $todayClass = ($day->format('Y-m-d') === $today->format('Y-m-d')) ? 'today' : '';
+      $body .= sprintf('<td class="youbi_%d %s">%d</td>', $day->format('w'), $todayClass, $day->format('d'));
+    }
+    return $body;
+  }
+
+  private function _getHead() {
+    $head = '';
+    $firstDayOfNextMonth = new \DateTime('first day of ' . $this->yearMonth . ' +1 month');
+    while ($firstDayOfNextMonth->format('w') > 0) {
+      $head .= sprintf('<td class="gray">%d</td>', $firstDayOfNextMonth->format('d'));
+      $firstDayOfNextMonth->add(new \DateInterval('P1D'));
+    }
+    return $head;
+  }
 
 }

@@ -1,17 +1,11 @@
 <?php
-$body = '';
-$period = new DatePeriod(
-  new DateTime('first day of this month'),
-  new DateInterval('P1D'),
-  new DateTime('first day of next month')
-);
+require 'calender.php';
 
-foreach($period as $day){
-  if ($day->format('w') % 7 ===0) { $body .= '</tr><tr>'; }
-  $body .= sprintf('<td class="youbi_%d">%d</td>', $day->format('w'), $day->format('d'));
-
+function h($s){
+  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
 
+$cal = new \MyApp\Calendar();
 ?>
 
 <!DOCTYPE html>
@@ -25,9 +19,9 @@ foreach($period as $day){
     <table>
    <thead>
      <tr>
-       <th><a href="">&laquo;</a></th>
-       <th colspan="5">August 2015</th>
-       <th><a href="">&raquo;</a></th>
+       <th><a href="/?t=<?php echo h($cal->prev); ?>">&laquo;</a></th>
+       <th colspan="5"><?php echo h($cal->yearMonth); ?></th>
+       <th><a href="/?t=<?php echo h($cal->next); ?>">&raquo;</a></th>
      </tr>
    </thead>
    <tbody>
@@ -40,13 +34,11 @@ foreach($period as $day){
              <td>Fri</td>
              <td>Sat</td>
            </tr>
-           <tr>
-            <?php echo $body; ?>
-           </tr>
+            <?php $cal->show(); ?>
    </tbody>
    <tfoot>
      <tr>
-       <th colspan="7"><a href="">Today</a></th>
+       <th colspan="7"><a href="/">Today</a></th>
      </tr>
    </tfoot>
  </table>
