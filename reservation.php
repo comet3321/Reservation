@@ -5,6 +5,11 @@ function h($s){
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $day = $_GET['id'];
 }
+$today = new \DateTime('today');
+if ($day < $today) {
+  echo '過去の日の予約はできません。';
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
