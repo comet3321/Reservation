@@ -24,6 +24,8 @@ $sql_result = $pdo->query("select id from customers where day = '$day'");
 $Result = $sql_result->fetchAll();
 $count = count($Result);
 
+$available = 5 - $count;
+
 if ($count >= 5) {
   echo '満席御礼！！！！！！！';
   exit();
@@ -38,7 +40,7 @@ if ($count >= 5) {
   </head>
   <body>
     <h1>予約画面</h1>
-    <p><?= h($day);  ?>の空き部屋は〇件です。</p>
+    <p><?= h($day);  ?>は現在残り<?= h($available) ?>部屋です。</p>
     <h2>予約する</h2>
     <form class="" action="actions.php" method="post">
       名前：<input type="text" name="name">
