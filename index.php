@@ -39,5 +39,6 @@ $cal = new \MyApp\Calendar();
      </tr>
    </tfoot>
  </table>
+ <p>*月曜日は定休日です。</p>
   </body>
 </html>

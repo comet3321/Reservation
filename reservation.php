@@ -30,6 +30,7 @@ if ($count >= 5) {
   echo '満席御礼！！！！！！！';
   exit();
 }
+
 ?>
 
 <!DOCTYPE html>
