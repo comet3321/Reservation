@@ -12,3 +12,13 @@ create table customers(
   num int,
   created_at datetime
 );
+
+ create table admin(
+   id int not null auto_increment primary key,
+   name varchar(255),
+   email varchar(255),
+   password varchar(255),
+   created_at datetime
+ );
+
+insert into admin (name, email, password) values ('admin', 'apd.jinx@gmail.com', 'admin');
