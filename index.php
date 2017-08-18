@@ -40,5 +40,6 @@ $cal = new \MyApp\Calendar();
    </tfoot>
  </table>
  <p>*月曜日は定休日です。</p>
+ <a href="login.php">店員用ページ</a>
   </body>
 </html>
