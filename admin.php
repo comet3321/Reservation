@@ -29,16 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    exit();
   }
 }
-//AdminUserの場合新規Userの追加ページを表示
-
 //前回のログイン以降の予約を表示
-$stmt = $pdo->prepare("select * from customers where created_at = :lastlogin");
+$stmt = $pdo->prepare("select * from customers where created_at > :lastlogin");
 $stmt->execute([
  ':lastlogin' => $user->lastlogin
 ]);
 $reserves = $stmt->fetchAll();
-//1週間ごとの詳しい予約内容を表示
-
+$count = count($reserves);
 
 //lastlogin更新
 $stmt = $pdo->prepare("update admin set lastlogin = now() where email = :email");
@@ -54,6 +51,19 @@ $stmt->execute([
      <title>管理ページ</title>
    </head>
    <body>
-     <p>ようこそ<?= $user->name; ?>さん</p>
+     <h1>ようこそ<?= $user->name; ?>さん</h1>
+     <h2>前回のログイン以降の予約は <?= $count ?>件です。</h2>
+     <?php if ($count >= 1) :?>
+       <?php foreach ($reserves as $row): ?>
+         <dt>
+           <?= h($row["name"]) ?>様
+         </dt>
+         <dd>
+           日付：<?= h($row["day"]) ?>
+           人数：<?= h($row["num"]) ?>
+         </dd>
+       <?php endforeach; ?>
+     <?php endif; ?>
+     <a href="#">新規ユーザー登録</a>
    </body>
  </html>
