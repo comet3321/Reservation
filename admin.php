@@ -32,9 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //AdminUserの場合新規Userの追加ページを表示
 
 //前回のログイン以降の予約を表示
-
+$stmt = $pdo->prepare("select * from customers where created_at = :lastlogin");
+$stmt->execute([
+ ':lastlogin' => $user->lastlogin
+]);
+$reserves = $stmt->fetchAll();
 //1週間ごとの詳しい予約内容を表示
 
+
+//lastlogin更新
+$stmt = $pdo->prepare("update admin set lastlogin = now() where email = :email");
+$stmt->execute([
+ ':email' => $user->email
+]);
  ?>
 
  <!DOCTYPE html>

@@ -10,7 +10,7 @@ create table customers(
   tel  varchar(255),
   day varchar(255),
   num int,
-  created_at datetime
+  created_at datetime not null default current_timestamp
 );
 
  create table admin(
@@ -18,7 +18,8 @@ create table customers(
    name varchar(255),
    email varchar(255),
    password varchar(255),
-   created_at datetime
+   lastlogin varchar(255),
+   created_at datetime not null default current_timestamp
  );
 
-insert into admin (name, email, password) values ('admin', 'apd.jinx@gmail.com', 'admin');
+insert into admin (name, email, password, lastlogin) values ('admin', 'apd.jinx@gmail.com', 'admin', now());
