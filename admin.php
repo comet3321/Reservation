@@ -1,5 +1,4 @@
 <?php
-
 require_once('config.php');
 
 //もしログインに失敗した場合はログインページへ飛ばす
@@ -42,6 +41,9 @@ $stmt = $pdo->prepare("update admin set lastlogin = now() where email = :email")
 $stmt->execute([
  ':email' => $user->email
 ]);
+
+$today = date('Y-m-d');
+var_dump($today);
  ?>
 
  <!DOCTYPE html>
@@ -64,6 +66,16 @@ $stmt->execute([
          </dd>
        <?php endforeach; ?>
      <?php endif; ?>
+     <h2>予約をする</h2>
+     <form class="" action="employee_reserve.php" method="post">
+       <input type="date" name="date" value=""  min="<?= $today; ?>">
+       <button type="submit" name="button">予約を入れる！</button>
+     </form>
+     <h2>予約を見る/変更する</h2>
+     <form class="" action="confirm_reserve.php" method="post">
+       <input type="date" name="date" value="">
+       <button type="submit" name="button">予約を確認する！</button>
+     </form>
      <a href="#">新規ユーザー登録</a>
    </body>
  </html>
