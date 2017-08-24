@@ -31,9 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $num = $_POST['num'];
   $day = $_POST['day'];
 
-  $stmt = $pdo->prepare('insert into customers(name, tel, num, day) values(?, ?, ?, ?)');
-  $stmt->execute([$name, $tel, $num, $day]);
-
+  if (!isset($_POST['employee'])) {
+    $stmt = $pdo->prepare('insert into customers(name, tel, num, day) values(?, ?, ?, ?)');
+    $stmt->execute([$name, $tel, $num, $day]);
+  }else{
+    $employee = $_POST['employee'];
+    $stmt = $pdo->prepare('insert into customers(name, tel, num, day, employee) values(?, ?, ?, ?, ?)');
+    $stmt->execute([$name, $tel, $num, $day, $employee]);
+    header('location: admin.php');
+    exit();
+  }
   header('location: index.php');
   exit();
 

@@ -1,7 +1,8 @@
 <?php
 require_once('config.php');
 
-//もしログインに失敗した場合はログインページへ飛ばす
+session_start();
+
 try {
   $pdo = new PDO(DSN, DB_USERNAME, DB_PASSWORD);
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -16,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   ]);
   $stmt->setFetchMode(\PDO::FETCH_CLASS, 'stdClass');
   $user = $stmt->fetch();
+  $_SESSION['email'] = $user->email;
 
   if (empty($user)) {
    echo 'ログイン失敗';
@@ -28,6 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    exit();
   }
 }
+
+if (!isset($_SESSION['email'])) {
+  echo '不正なアクセスです。';
+  exit();
+}else{
+  $stmt = $pdo->prepare("select * from admin where email = :email");
+  $stmt->execute([
+   ':email' => $_SESSION['email']
+  ]);
+  $stmt->setFetchMode(\PDO::FETCH_CLASS, 'stdClass');
+  $user = $stmt->fetch();
+}
+
 //前回のログイン以降の予約を表示
 $stmt = $pdo->prepare("select * from customers where created_at > :lastlogin");
 $stmt->execute([
@@ -43,7 +58,8 @@ $stmt->execute([
 ]);
 
 $today = date('Y-m-d');
-var_dump($today);
+
+
  ?>
 
  <!DOCTYPE html>
