@@ -24,3 +24,13 @@ create table customers(
  );
 
 insert into admin (name, email, password, lastlogin) values ('admin', 'apd.jinx@gmail.com', 'admin', now());
+
+  create table cancel(
+    id int not null auto_increment primary key,
+    name varchar(255),
+    tel  varchar(255),
+    day varchar(255),
+    num int,
+    employee varchar(255)  default 'お客さん',
+    created_at datetime not null default current_timestamp
+  );
