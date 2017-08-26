@@ -92,6 +92,6 @@ $today = date('Y-m-d');
        <input type="date" name="date" value="">
        <button type="submit" name="button">予約を確認する！</button>
      </form>
-     <a href="#">新規ユーザー登録</a>
+     <a href="signin.html">新規ユーザー登録</a>
    </body>
  </html>
