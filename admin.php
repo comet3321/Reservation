@@ -1,7 +1,8 @@
 <?php
+session_start();
+
 require_once('config.php');
 
-session_start();
 
 try {
   $pdo = new PDO(DSN, DB_USERNAME, DB_PASSWORD);
@@ -24,9 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    exit();
   }
 
-  //if (!password_verify($_POST['password'], $user->password)) {
-  if(!$_POST['password'] == $user->password){ //登録画面を作るまで
-   echo 'ログイン失敗';
+  if (!password_verify($_POST['password'], $user->password)) {
+   echo 'パスワードが違います';
    exit();
   }
 }

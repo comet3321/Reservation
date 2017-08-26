@@ -1,6 +1,7 @@
 <?php
-require_once('config.php');
 session_start();
+
+require_once('config.php');
 
 
 try {
@@ -11,7 +12,7 @@ try {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if ($_POST['email'] === 'apd.jinx@gmail.com' || $_POST['password'] === 'admin') {
+  if ($_POST['email'] === 'apd.jinx@gmail.com' || password_verify($_POST['password'], $user->password)){
     echo 'success';
   }else{
     echo 'error';
@@ -31,8 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    exit();
   }
 
-  //if (!password_verify($_POST['password'], $user->password)) {
-  if(!$_POST['password'] == $user->password){ //登録画面を作るまで
+  if (!password_verify($_POST['password'], $user->password)) {
    echo 'ログイン失敗';
    exit();
   }

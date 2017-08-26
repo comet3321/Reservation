@@ -1,7 +1,7 @@
 <?php
+session_start();
 
 require_once('config.php');
-session_start();
 if (!isset($_SESSION['email'])) {
   echo '不正なアクセスです。';
 }
@@ -29,7 +29,7 @@ if (!isset($_POST['password'])) {
 
 $name = $_POST['name'];
 $email = $_POST['email'];
-$password = hash_hmac('sha256', $_POST['password'], 'dheqeuiqwehfg');
+$password = password_hash( $_POST['password'], PASSWORD_DEFAULT);
 
 $stmt = $pdo->prepare('insert into admin(name, email, password) values(?, ?, ?)');
 $stmt->execute([$name, $email, $password,]);

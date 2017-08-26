@@ -1,6 +1,7 @@
 <?php
-require_once('config.php');
 session_start();
+
+require_once('config.php');
 
 try {
   $pdo = new PDO(DSN, DB_USERNAME, DB_PASSWORD);
