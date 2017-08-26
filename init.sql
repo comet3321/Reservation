@@ -32,5 +32,7 @@ insert into admin (name, email, password, lastlogin) values ('admin', 'apd.jinx@
     day varchar(255),
     num int,
     employee varchar(255)  default 'お客さん',
-    created_at datetime not null default current_timestamp
+    canceler varchar(255),
+    created varchar(255),
+    deleted datetime not null default current_timestamp
   );

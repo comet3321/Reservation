@@ -28,7 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ':date' => $date
   ]);
   $reserves = $stmt->fetchAll();
+
+  $stmt = $pdo->prepare("select * from cancel where day = :date");
+  $stmt->execute([
+    ':date' => $date
+  ]);
+  $cancels = $stmt->fetchAll();
 }
+
+
 ?>
 
 
@@ -39,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>検索結果</title>
   </head>
   <body>
-    <h2><?= $user->name; ?></h2>
-    <h1><?= $date; ?>の予約</h1>
+    <h2><?= h($user->name); ?></h2>
+    <h1><?= h($date); ?>の予約</h1>
     <?php if(empty($reserves)) :?>
       <p>予約はありません。</p>
     <?php else : ?>
@@ -49,11 +57,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <?= h($row["name"]) ?>様
         </dt>
         <dd>
-          日付：<?= h($row["day"]) ?>
           人数：<?= h($row["num"]) ?>
+          予約した人<?= h($row["employee"]) ?>
         </dd>
+        <form class="" action="cancel.php" method="post">
+          <input type="hidden" name="id" value="<?= h($row["id"]); ?>">
+          <input type="hidden" name="name" value="<?= h($user->name) ; ?>">
+          <button type="submit" name="button">キャンセル</button>
+        </form>
       <?php endforeach; ?>
-
+    <?php endif; ?>
+    <?php if(isset($cancels)) :?>
+      <?php foreach ($cancels as $row): ?>
+        <dt style="color: red;">
+          <?= h($row["name"]) ?>様
+        </dt>
+        <dd style="color: red;">
+          人数：<?= h($row["num"]) ?>
+          予約した人：<?= h($row["employee"]) ?>
+          キャンセルした人：<?= h($row["canceler"]) ?>
+        </dd>
+        <form class="" action="cancel.php" method="post">
+          <input type="hidden" name="id" value="<?= h($row["id"]); ?>">
+          <input type="hidden" name="name" value="<?= h($user->name) ; ?>">
+        </form>
+      <?php endforeach; ?>
     <?php endif; ?>
   </body>
 </html>
